@@ -3,25 +3,12 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Edulife Kids | Skills for Life, Confidence for Tomorrow',
+  title: 'Edulife Kids | After-School Learning in Khagrachari',
   description: 'After-school coding, English and computer skills for children in Khagrachari. Explore our five-level curriculum and four learning centers.',
   generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: '/edulife-kids-logo.png',
+    apple: '/edulife-kids-logo.png',
   },
 }
 

@@ -83,9 +83,11 @@ export function CurriculumHeader() {
           </button>
           <nav className={`main-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
             <Link onClick={closeMenu} href="/">Home</Link>
+            <Link onClick={closeMenu} href="/about">About us</Link>
             <div className="nav-submenu-wrapper">
-              <button type="button" className="nav-submenu-trigger" onClick={() => setCurriculumOpen(!curriculumOpen)} aria-expanded={curriculumOpen} aria-controls="subject-curriculum-menu">
-                Curriculum <ChevronDown size={13} />
+              <Link className="nav-submenu-link" onClick={closeMenu} href="/#programs">Curriculum</Link>
+              <button type="button" className="nav-submenu-trigger" onClick={() => setCurriculumOpen(!curriculumOpen)} aria-label={curriculumOpen ? 'Close Curriculum submenu' : 'Open Curriculum submenu'} aria-expanded={curriculumOpen} aria-controls="subject-curriculum-menu">
+                <ChevronDown size={13} />
               </button>
               {curriculumOpen && <div className="nav-submenu" id="subject-curriculum-menu">
                 <Link onClick={() => { closeMenu(); setCurriculumOpen(false) }} href="/curriculum/coding">Coding</Link>
@@ -93,7 +95,6 @@ export function CurriculumHeader() {
                 <Link onClick={() => { closeMenu(); setCurriculumOpen(false) }} href="/curriculum/computer-skills">Computer Skills</Link>
               </div>}
             </div>
-            <Link onClick={closeMenu} href="/#programs">Programs</Link>
             <Link onClick={closeMenu} href="/#centers">Learning centers</Link>
             <Link onClick={closeMenu} href="/#about">Our approach</Link>
           </nav>
@@ -118,7 +119,7 @@ export function CurriculumFooter() {
         </div>
         <div className="footer-links">
           <div><span>PROGRAMS</span><Link href="/curriculum/coding">Coding</Link><Link href="/curriculum/english">English</Link><Link href="/curriculum/computer-skills">Computer Skills</Link><Link href="/curriculum/coding">Browse subject pages</Link></div>
-          <div><span>FAMILIES</span><Link href="/#admissions">Admissions</Link><Link href="/#centers">Learning centers</Link><Link href="/#about">Our approach</Link><Link href="/#contact">Contact</Link></div>
+          <div><span>FAMILIES</span><Link href="/#admissions">Admissions</Link><Link href="/#centers">Learning centers</Link><Link href="/about">About us</Link><Link href="/#about">Our approach</Link><Link href="/#contact">Contact</Link></div>
           <div><span>GET IN TOUCH</span><a href="tel:+8801519575226">01519-575226</a><Link href="/#centers">Khagrachari, Bangladesh</Link></div>
         </div>
       </div>

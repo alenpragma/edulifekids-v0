@@ -1,6 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
+import { Dialog } from '@base-ui/react/dialog'
+import { Brand } from '@/components/site-brand'
 import {
   ArrowDownRight,
   ArrowRight,
@@ -61,29 +63,39 @@ const centers = [
   { area: 'GUIMARA', name: 'Ramsu Bazar Learning Center', address: 'Ramsu Bazar, Guimara Sadar' },
 ]
 const initiatives = [
-  { name: 'Edulife Kids', type: 'initiative', label: 'AFTER-SCHOOL PROGRAM', icon: '/family-icon-placeholder.png' },
-  { name: 'Edulife IT School', type: 'school', label: 'FLAGSHIP SCHOOL', icon: '/family-icon-placeholder.png' },
-  { name: 'Edulife IT', type: 'initiative', label: 'TECHNOLOGY TRAINING', icon: '/family-icon-placeholder.png' },
-  { name: 'Edulife Agency', type: 'initiative', label: 'CREATIVE & DIGITAL', icon: '/family-icon-placeholder.png' },
-  { name: 'Edulife Publications', type: 'initiative', label: 'BOOKS & LEARNING', icon: '/family-icon-placeholder.png' },
-  { name: 'FoodLife', type: 'initiative', label: 'FOOD & NUTRITION', icon: '/family-icon-placeholder.png' },
-  { name: 'Edulife Tech', type: 'initiative', label: 'PRODUCT & SOFTWARE', icon: '/family-icon-placeholder.png' },
-  { name: 'Sindukchari Eco Resort', type: 'initiative', label: 'ECO RESORT', icon: '/family-icon-placeholder.png' },
+  { name: 'Edulife Kids', type: 'initiative', label: 'AFTER-SCHOOL PROGRAM', href: 'https://edulifekids.com', icon: '/family-icon-placeholder.png' },
+  { name: 'Edulife IT School', type: 'school', label: 'FLAGSHIP SCHOOL', href: 'https://edulifeitschool.com', icon: '/family-icon-placeholder.png' },
+  { name: 'Edulife IT', type: 'initiative', label: 'TECHNOLOGY TRAINING', href: 'https://edulife.bd', icon: '/family-icon-placeholder.png' },
+  { name: 'Edulife Agency', type: 'initiative', label: 'CREATIVE & DIGITAL', href: 'https://edulifeagency.com', icon: '/family-icon-placeholder.png' },
+  { name: 'Edulife Publications', type: 'initiative', label: 'BOOKS & LEARNING', href: 'https://edulifepublications.com', icon: '/family-icon-placeholder.png' },
+  { name: 'FoodLife', type: 'initiative', label: 'FOOD & NUTRITION', href: 'https://facebook.com/groups/401420745439338', icon: '/family-icon-placeholder.png' },
+  { name: 'Sindukchari Eco Resort', type: 'initiative', label: 'ECO RESORT', href: 'https://sindukchariresort.life', icon: '/family-icon-placeholder.png' },
+  { name: 'Edulife Foundation', type: 'initiative', label: 'COMMUNITY & IMPACT', href: 'https://foundation.edulife.bd', icon: '/family-icon-placeholder.png' },
 ]
-
-function Brand() {
-  return (
-    <a className="brand" href="#home" aria-label="Edulife Kids home">
-      <span className="brand-mark" aria-hidden="true"><span>e</span><span>k</span><span>+</span><span>✳</span></span>
-      <span className="brand-copy"><strong>Edulife Kids</strong><small>AFTER SCHOOL PROGRAM</small></span>
-    </a>
-  )
-}
 
 export function EdulifeHome() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [curriculumOpen, setCurriculumOpen] = useState(false)
+  const [centerFormOpen, setCenterFormOpen] = useState(false)
+  const [centerFormSubmitted, setCenterFormSubmitted] = useState(false)
   const closeMenu = () => setMenuOpen(false)
+
+  const handleCenterRequestSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    const fields = [
+      ['Name', formData.get('name')],
+      ['WhatsApp', formData.get('whatsapp')],
+      ['Email', formData.get('email')],
+      ['Address / area', formData.get('address')],
+      ['Why a learning center is needed', formData.get('reason')],
+      ['How I can help locally', formData.get('localHelp')],
+    ]
+    const body = fields.map(([label, value]) => `${label}:\n${value}`).join('\n\n')
+    const mailto = `mailto:helloedulife@gmail.com?subject=${encodeURIComponent('Request a new learning center')}&body=${encodeURIComponent(`Hello Edulife Kids team,\n\n${body}\n\nThank you.`)}`
+    setCenterFormSubmitted(true)
+    window.location.href = mailto
+  }
 
   return (
     <>
@@ -100,9 +112,11 @@ export function EdulifeHome() {
           </button>
           <nav className={`main-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
             <a onClick={closeMenu} href="#home">Home</a>
+            <a onClick={closeMenu} href="/about">About us</a>
             <div className="nav-submenu-wrapper">
-              <button type="button" className="nav-submenu-trigger" onClick={() => setCurriculumOpen(!curriculumOpen)} aria-expanded={curriculumOpen} aria-controls="home-curriculum-menu">
-                Curriculum <ChevronDown size={13} />
+              <a className="nav-submenu-link" onClick={closeMenu} href="#programs">Curriculum</a>
+              <button type="button" className="nav-submenu-trigger" onClick={() => setCurriculumOpen(!curriculumOpen)} aria-label={curriculumOpen ? 'Close Curriculum submenu' : 'Open Curriculum submenu'} aria-expanded={curriculumOpen} aria-controls="home-curriculum-menu">
+                <ChevronDown size={13} />
               </button>
               {curriculumOpen && (
                 <div className="nav-submenu" id="home-curriculum-menu">
@@ -112,7 +126,6 @@ export function EdulifeHome() {
                 </div>
               )}
             </div>
-            <a onClick={closeMenu} href="#programs">Programs <ChevronDown size={13} /></a>
             <a onClick={closeMenu} href="#centers">Learning centers</a>
             <a onClick={closeMenu} href="#about">Our approach</a>
             <a className="mobile-portal-link" onClick={closeMenu} href="/student-login"><GraduationCap size={16} /> Student login</a>
@@ -172,14 +185,14 @@ export function EdulifeHome() {
           <div className="exam-note"><span className="exam-number">80<small>%</small></span><div><strong>The pass mark is 80%, and it is not rounded up.</strong><p>A semester exam every three months decides whether a child moves up. Below 80%, the level is repeated and reassessed — not skipped.</p></div><a className="text-link" href="#about">How progression works <ArrowRight size={16} /></a></div>
         </section>
 
-        <section className="centers-section" id="centers"><div className="centers-top"><div><span className="eyebrow"><span className="eyebrow-line" /> WHERE WE TEACH</span><h2>Four centers across<br /><span>four upazilas.</span></h2></div><div className="centers-intro"><p>Children attend the center nearest them. Every center runs the full program — Coding, English and Computer Skills together — across Levels 1–5.</p><ul><li><Check size={15} /> Full program at every center</li><li><Check size={15} /> After school, Saturday to Thursday</li><li><Check size={15} /> One exam, one standard</li></ul></div></div><div className="center-grid">{centers.map((center, index) => <article className="center-card" key={center.name}><div className="center-card-top"><span>0{index + 1} / LEARNING CENTER</span><MapPin size={17} /></div><span className="center-area">{center.area}</span><h3>{center.name}</h3><p>{center.address}, Khagrachari</p><div className="center-card-bottom"><a href="tel:+8801519575226"><Phone size={14} /> 01519-575226</a><a className="center-arrow" href="#admissions" aria-label={`Book a visit to ${center.name}`}><ArrowUpRight size={19} /></a></div></article>)}</div><p className="center-hours"><span className="live-dot" /> Saturday – Thursday <span>·</span> After school hours <span>·</span> Closed Friday</p></section>
+        <section className="centers-section" id="centers"><div className="centers-top"><div><span className="eyebrow"><span className="eyebrow-line" /> WHERE WE TEACH</span><h2>Four centers across<br /><span>four upazilas.</span></h2></div><div className="centers-intro"><p>Children attend the center nearest them. Every center runs the full program — Coding, English and Computer Skills together — across Levels 1–5.</p><ul><li><Check size={15} /> Full program at every center</li><li><Check size={15} /> After school, Saturday to Thursday</li><li><Check size={15} /> One exam, one standard</li></ul></div></div><div className="center-grid">{centers.map((center, index) => <article className="center-card" key={center.name}><div className="center-card-top"><span>0{index + 1} / LEARNING CENTER</span><MapPin size={17} /></div><span className="center-area">{center.area}</span><h3>{center.name}</h3><p>{center.address}, Khagrachari</p><div className="center-card-bottom"><a href="tel:+8801519575226"><Phone size={14} /> 01519-575226</a><a className="center-arrow" href="#admissions" aria-label={`Book a visit to ${center.name}`}><ArrowUpRight size={19} /></a></div></article>)}</div><p className="center-hours"><span className="live-dot" /> Saturday – Thursday <span>·</span> After school hours <span>·</span> Closed Friday</p><div className="center-request"><div className="center-request-copy"><strong>A learning center closer to home?</strong><p>Tell us where you’d like us to teach next.</p><small>Your request opens in a pre-filled email; you choose whether to send it.</small></div><Dialog.Root open={centerFormOpen} onOpenChange={(open) => { setCenterFormOpen(open); if (open) setCenterFormSubmitted(false) }}><Dialog.Trigger className="button button-primary">Request a center in my area <ArrowRight size={16} /></Dialog.Trigger><Dialog.Portal><Dialog.Backdrop className="center-dialog-backdrop" /><Dialog.Viewport className="center-dialog-viewport"><Dialog.Popup className="center-dialog-popup"><div className="center-dialog-heading"><div><Dialog.Title className="center-dialog-title">Request a learning center</Dialog.Title><Dialog.Description className="center-dialog-description">Tell us about your community and how you can help us bring learning closer.</Dialog.Description></div><Dialog.Close className="center-dialog-close" aria-label="Close request form"><X size={20} /></Dialog.Close></div>{centerFormSubmitted ? <div className="center-request-success" role="status"><span className="center-success-icon"><Check size={23} /></span><h3>Thank you for reaching out.</h3><p>Your email app should open with your request details. Please press Send there so our team receives your request.</p></div> : <form className="center-request-form" id="center-request-form" onSubmit={handleCenterRequestSubmit}><div className="center-form-grid"><label>Name<input name="name" autoComplete="name" required /></label><label>WhatsApp number<input name="whatsapp" type="tel" autoComplete="tel" required /></label><label>Email address<input name="email" type="email" autoComplete="email" required /></label><label>Your address / area<textarea name="address" autoComplete="street-address" rows={2} required /></label><label>Why do you need a learning center in your area?<textarea name="reason" rows={3} required /></label><label>How could you help us locally?<textarea name="localHelp" rows={3} placeholder="For example: finding a venue, sharing the program with families, or volunteering." required /></label></div><button className="button button-primary center-form-submit" type="submit">Submit request <ArrowRight size={16} /></button><p className="center-form-note">After submitting, your email app opens with the request details. Press Send there to deliver it.</p></form>}</Dialog.Popup></Dialog.Viewport></Dialog.Portal></Dialog.Root></div></section>
 
-        <section className="family-section" aria-labelledby="family-heading"><div className="family-copy"><span className="eyebrow"><span className="eyebrow-line" /> THE EDULIFE FAMILY</span><h2 id="family-heading">One institute.<br /><span>A growing family.</span></h2><p>Edulife Kids is part of a growing family built by Edulife IT Institute, teaching technology in Khagrachari since 2015. As new initiatives take shape, this directory grows with them.</p><a className="text-link" href="#contact">Discover our story <ArrowRight size={16} /></a></div><div className="family-directory"><div className="family-directory-head"><span>OUR WORK, IN MANY FORMS</span><span>{initiatives.filter((item) => item.type === 'initiative').length} initiatives <i /> {initiatives.filter((item) => item.type === 'school').length} school</span></div><div className="family-list">{initiatives.map((item) => <article className={`family-item${item.name === 'Edulife Kids' ? ' is-current' : ''}`} key={item.name}><img className="family-icon" src={item.icon} alt="" aria-hidden="true" /><strong>{item.name}</strong><span>{item.label}</span><ArrowUpRight size={16} /></article>)}</div><p className="family-footnote">Growing together in Khagrachari, Chittagong Hill Tracts.</p></div></section>
+        <section className="family-section" aria-labelledby="family-heading"><div className="family-copy"><span className="eyebrow"><span className="eyebrow-line" /> THE EDULIFE FAMILY</span><h2 id="family-heading">One institute.<br /><span>A growing family.</span></h2><p>Edulife Kids is part of a growing family built by Edulife IT Institute, teaching technology in Khagrachari since 2015. As new initiatives take shape, this directory grows with them.</p><a className="text-link" href="/about">Discover our story <ArrowRight size={16} /></a></div><div className="family-directory"><div className="family-directory-head"><span>OUR WORK, IN MANY FORMS</span><span>{initiatives.filter((item) => item.type === 'initiative').length} initiatives <i /> {initiatives.filter((item) => item.type === 'school').length} school</span></div><div className="family-list">{initiatives.map((item) => <a className={`family-item${item.name === 'Edulife Kids' ? ' is-current' : ''}`} href={item.href} target="_blank" rel="noopener noreferrer" aria-label={`${item.name} — opens in a new tab`} key={item.name}><img className="family-icon" src={item.icon} alt="" aria-hidden="true" /><strong>{item.name}</strong><span>{item.label}</span><ArrowUpRight size={16} aria-hidden="true" /></a>)}</div><p className="family-footnote">Growing together in Khagrachari, Chittagong Hill Tracts.</p></div></section>
 
         <section className="admissions-section" id="admissions"><div className="admissions-decor" aria-hidden="true">EK</div><div className="admissions-content"><span className="eyebrow"><span className="eyebrow-line" /> EDULIFE KIDS · KHAGRACHARI</span><h2>Begin your child’s<br /><em>Edulife story.</em></h2><p>Admissions for the January 2027 intake are open. Come meet a mentor, see a learning center, and find out where your child’s journey can begin.</p><div className="admissions-actions"><a className="button button-primary" href="tel:+8801519575226">Apply for admission <ArrowRight size={17} /></a><a className="button button-outline" href="tel:+8801519575226">Book a campus visit <MapPin size={16} /></a></div><div className="admissions-foot"><span><Check size={14} /> No fee to submit an enquiry</span><span><Check size={14} /> We reply within two working days</span></div></div><div className="contact-stack"><div className="contact-card"><span>LET’S TALK</span><a href="tel:+8801816575225"><Phone size={17} /> 01816-575225</a><a href="tel:+8801519575225">01519-575225</a><a href="mailto:helloedulife@gmail.com">helloedulife@gmail.com</a><a href="mailto:info@edulifekids.com">info@edulifekids.com</a><small>Saturday – Thursday<br />9:00 AM – 6:00 PM</small></div><a className="contact-card contact-social" href="https://www.facebook.com/edulifekids" target="_blank" rel="noopener noreferrer"><span className="social-badge" aria-hidden="true">f</span><span><strong>Follow us on Facebook</strong><small>News, events and learner stories</small></span></a><a className="contact-card contact-social" href="https://chat.whatsapp.com/edulife-smart-parents" target="_blank" rel="noopener noreferrer"><span className="social-badge social-badge-whatsapp" aria-hidden="true"><MessageCircle size={16} /></span><span><strong>Join the Smart Parent Community</strong><small>Tips and updates on WhatsApp</small></span></a></div></section>
       </main>
 
-      <footer className="site-footer" id="contact"><div className="footer-main"><div className="footer-brand"><Brand /><p>Skills for Life. Confidence for Tomorrow. An initiative of Edulife IT Institute, working in Khagrachari since 2015.</p><a className="footer-call" href="tel:+8801519575226"><Phone size={15} /> Talk to our team <ArrowUpRight size={14} /></a></div><div className="footer-links"><div><span>SUBJECTS</span><a href="/curriculum/coding">Coding</a><a href="/curriculum/english">English</a><a href="/curriculum/computer-skills">Computer Skills</a></div><div><span>FAMILIES</span><a href="#admissions">Admissions</a><a href="#centers">Learning centers</a><a href="#about">Our approach</a><a href="#contact">Contact</a></div><div><span>GET IN TOUCH</span><a href="tel:+8801519575226">01519-575226</a><a href="mailto:kids@edulife.example">kids@edulife.example</a><a href="#centers">Khagrachari, Bangladesh</a></div></div></div><div className="footer-bottom"><span>© 2026 Edulife Kids — After School Program</span><span>Made with care in Khagrachari <span className="footer-heart">✳</span></span><a href="#home">Back to top ↑</a></div></footer>
+      <footer className="site-footer" id="contact"><div className="footer-main"><div className="footer-brand"><Brand /><p>Skills for Life. Confidence for Tomorrow. An initiative of Edulife IT Institute, working in Khagrachari since 2015.</p><a className="footer-call" href="tel:+8801519575226"><Phone size={15} /> Talk to our team <ArrowUpRight size={14} /></a></div><div className="footer-links"><div><span>SUBJECTS</span><a href="/curriculum/coding">Coding</a><a href="/curriculum/english">English</a><a href="/curriculum/computer-skills">Computer Skills</a></div><div><span>FAMILIES</span><a href="#admissions">Admissions</a><a href="#centers">Learning centers</a><a href="/about">About us</a><a href="#about">Our approach</a><a href="#contact">Contact</a></div><div><span>GET IN TOUCH</span><a href="tel:+8801519575226">01519-575226</a><a href="mailto:kids@edulife.example">kids@edulife.example</a><a href="#centers">Khagrachari, Bangladesh</a></div></div></div><div className="footer-bottom"><span>© 2026 Edulife Kids — After School Program</span><span>Made with care in Khagrachari <span className="footer-heart">✳</span></span><a href="#home">Back to top ↑</a></div></footer>
     </>
   )
 }
